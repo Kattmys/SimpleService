@@ -1,0 +1,7 @@
+#!/bin/sh
+
+DIR=`realpath -s $0`
+DIR=`dirname $DIR`
+DIR=`dirname $DIR`
+
+python $DIR/src/main.py
