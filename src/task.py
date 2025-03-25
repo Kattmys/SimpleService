@@ -10,12 +10,6 @@ def remove_escape_seqs(string):
         string = string[:string.index("\033")] + string[string.index("m", string.index("\033"))+1:]
     return string
 
-ex = "{RED}HEJ!{RESET}".format(**COLORS)
-
-print(ex)
-print(repr(ex))
-print(repr(remove_escape_seqs(ex)))
-
 class Task:
     tasks = {}
 
@@ -94,8 +88,9 @@ class Task:
             for j in range(len(row)):
                 rows[i][j] += " " * (max_lens[j] - len(remove_escape_seqs(rows[i][j])))
 
-        rows = [" | ".join(i) for i in rows]
-        rows.insert(1, "-" * len(rows[0]))
+        sep = " {GRAY}|{RESET} ".format(**COLORS)
+        rows = [sep.join(i) for i in rows]
+        rows.insert(1, ("{GRAY}" + "-" * len(remove_escape_seqs(rows[0])) + "{RESET}").format(**COLORS))
         return "\n".join(rows)
 
     @property
