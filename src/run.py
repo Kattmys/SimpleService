@@ -40,7 +40,8 @@ def process_command(cmd):
         case "list":
             m = check_args(0)
             if m is not None: return m
-            return "\n".join([str(i) for i in Task.tasks.keys()])
+            # return "\n".join([str(i) for i in Task.tasks.keys()])
+            return Task.list()
         
         case _:
             return "Unknown command."

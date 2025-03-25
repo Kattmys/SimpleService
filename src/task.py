@@ -2,6 +2,19 @@ import subprocess
 import threading
 
 from log import Msg
+from variables import *
+
+def remove_escape_seqs(string):
+    # remove escape codes from string
+    while "\033" in string:
+        string = string[:string.index("\033")] + string[string.index("m", string.index("\033"))+1:]
+    return string
+
+ex = "{RED}HEJ!{RESET}".format(**COLORS)
+
+print(ex)
+print(repr(ex))
+print(repr(remove_escape_seqs(ex)))
 
 class Task:
     tasks = {}
@@ -49,14 +62,41 @@ class Task:
             __class__.taken_names.add(alias)
         __class__.tasks[self.name] = self
 
-    # @classmethod
-    # def from_config(cls, config):
-    #     return cls(
-    #         config["name"],
-    #         config["cmd"],
-    #         aliases=config["aliases"],
-    #         shell=config["shell"]
-    #     )
+    def format(self):
+        # return formatted description of task
+        # it is returned as a list of parts
+
+        return [
+            # "{YELLOW}{}{RESET}".format(self.display, **COLORS) + \
+            #     f" ({self.name})" if self.name != self.display else "",
+            "{YELLOW}{}{RESET}".format(self.display, **COLORS),
+            self.name,
+            ("{GREEN}Alive{RESET}" if self.alive else "{RED}Dead{RESET}").format(**COLORS),
+        ]
+
+    @classmethod
+    def list(cls):
+        if len(cls.tasks) == 0:
+            return
+
+        rows  = []
+        rows += [["Display name", "Name", "Status"]]
+        rows += [task.format() for task in cls.tasks.values()]
+
+        max_lens = [0] * len(rows[0])
+        for row in rows:
+            for col_i, col in zip(range(len(row)), row):
+                length = len(remove_escape_seqs(col))
+                if length > max_lens[col_i]:
+                    max_lens[col_i] = length
+
+        for i in range(len(rows)):
+            for j in range(len(row)):
+                rows[i][j] += " " * (max_lens[j] - len(remove_escape_seqs(rows[i][j])))
+
+        rows = [" | ".join(i) for i in rows]
+        rows.insert(1, "-" * len(rows[0]))
+        return "\n".join(rows)
 
     @property
     def alive(self):

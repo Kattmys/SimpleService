@@ -2,6 +2,8 @@ from queue import Queue
 from datetime import datetime
 import os
 
+from variables import *
+
 main_messages = {
     "Basic":          "{msg}",
     "Debug":          "DEBUG: {msg}",
@@ -28,14 +30,6 @@ class MsgClass:
             raise NameError(f"Not found: {item}")
 
 Msg = MsgClass()
-
-COLORS = {
-    "RED":    '\x1b[91m',
-    "GREEN":  '\x1b[92m',
-    "YELLOW": '\x1b[93m',
-    "BLUE":   '\x1b[94m',
-    "RESET":  '\x1b[0m'
-}
 
 get_date = lambda: datetime.now().isoformat(" ", "minutes")
 
