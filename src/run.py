@@ -69,10 +69,10 @@ def process_command(cmd):
             else:
                 return f"Task {args[0]} not found."
 
+path = sys.argv[1] if len(sys.argv) > 1 else "user/config.py"
+
 logger = Logger()
 Task.default_log = logger
-
-path = sys.argv[1] if len(sys.argv) > 1 else "user/config.py"
 
 g = runpy.run_path(
     path,
@@ -86,6 +86,11 @@ if "tasks" in g:
 else:
     print(f"Variable 'tasks' not found in {path}.")
     sys.exit(1)
+
+if "log_file" in g:
+    logger.main_log_file = g["log_file"]
+if "tasks_dir" in g:
+    logger.tasks_dir = g["tasks_dir"]
 
 logger.log(Msg.Starting)
 

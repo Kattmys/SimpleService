@@ -6,20 +6,20 @@ from variables import *
 
 main_messages = {
     "Basic":            "{msg}",
-    "Debug":            "DEBUG: {msg}",
-    "Starting":         "Starting...",
-    "Started":          "Started!",
-    "Finished":         "Finished.",
-    "TaskInvalidArgs":  "Invalid arguments for '{name}': {msg}",
-    "SIGINT":           "SIGINT received!",
-    "InternalError":    "Error! {error}"
+    "Debug":            "{RED}DEBUG:{RESET} {msg}",
+    "Starting":         "{GREEN}Starting...{RESET}",
+    "Started":          "{GREEN}Started!{RESET}",
+    "Finished":         "{GREEN}Finished.{RESET}",
+    "TaskInvalidArgs":  "{RED}Invalid arguments for '{name}':{RESET} {msg}",
+    "SIGINT":           "{RED}SIGINT received!{RESET}",
+    "InternalError":    "{RED}Error!{RESET} {error}"
 }
 
 task_messages = {
     "Output":         "{output}",
     "ProcessBasic":   "{msg}",
-    "ProcessStarted": "Started!",
-    "ProcessExited":  "Exited with return code {return_code}."
+    "ProcessStarted": "{GREEN}Started!{RESET}",
+    "ProcessExited":  "{RED}Exited with return code {return_code}.{RESET}"
 }
 
 messages = main_messages | task_messages
