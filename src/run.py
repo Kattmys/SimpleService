@@ -30,11 +30,12 @@ def process_command(cmd):
             return "Invalid number of arguments: expected " + ", ".join([str(i) for i in lengths])
 
     num_args = {
-        "kill":  1,
-        "list":  0,
-        "names": 0,
-        "send":  2,
-        "ask":   2,
+        "restart": 0,
+        "kill":    1,
+        "list":    0,
+        "names":   0,
+        "send":    2,
+        "ask":     2,
     }
 
     if cmd in num_args:
@@ -45,6 +46,11 @@ def process_command(cmd):
         return "Unknown command."
 
     match cmd:
+        case "restart":
+            for task in tasks:
+                task.start()
+            logger.log(Msg.Started)
+
         case "kill":
             t = Task.get(args[0])
             if t:
