@@ -84,8 +84,18 @@ class Logger:
                     file.write(main_out)
 
         else:
+            # add newline if file doesn't end with a newline
+            add_newline = False
+            try:
+                with open(os.path.join(self.tasks_dir, task.name), "r") as file:
+                    lastchar = file.read()[-1]
+                    if lastchar != "\n":
+                        add_newline = True
+            except FileNotFoundError:
+                pass
+
             with open(os.path.join(self.tasks_dir, task.name), "a") as file:
-                file.write(kwargs["output"])
+                file.write(("\n" if add_newline else "") + kwargs["output"])
 
     def log(self, msg_type, task=None, **kwargs):
         # # check if kwargs are valid
