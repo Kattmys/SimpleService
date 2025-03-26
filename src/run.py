@@ -29,22 +29,45 @@ def process_command(cmd):
         if len(args) not in lengths:
             return "Invalid number of arguments: expected " + ", ".join([str(i) for i in lengths])
 
+    num_args = {
+        "kill":  1,
+        "list":  0,
+        "names": 0,
+        "send":  2,
+        "ask":   2,
+    }
+
+    if cmd in num_args:
+        m = check_args(num_args[cmd])
+        if m is not None:
+            return m
+    else:
+        return "Unknown command."
+
     match cmd:
         case "kill":
-            m = check_args(1)
-            if m is not None: return m
-
-            Task.tasks[args[0]].process.kill()
-            return "Killed!"
+            t = Task.get(args[0])
+            if t:
+                t.process.kill()
+                return "Killed!"
+            else:
+                return f"Task {args[0]} not found."
 
         case "list":
-            m = check_args(0)
-            if m is not None: return m
-            # return "\n".join([str(i) for i in Task.tasks.keys()])
             return Task.list()
         
-        case _:
-            return "Unknown command."
+        case "names":
+            return Task.names()
+
+        case "send":
+            t = Task.get(args[0])
+            if t:
+                if t.send(args[1] + "\n"):
+                    return "Sent!"
+                else:
+                    return "Not sent."
+            else:
+                return f"Task {args[0]} not found."
 
 logger = Logger()
 Task.default_log = logger
@@ -72,22 +95,31 @@ for task in tasks:
     task.start()
 logger.log(Msg.Started)
 
-while True:
-    cmd = receive_pipe.readline()
-    if cmd:
-        send_to_pipe(process_command(cmd) + "\n")
+try:
+    while True:
+        cmd = receive_pipe.readline()
+        if cmd:
+            send_to_pipe(process_command(cmd) + "\n")
+
+        logger.dump_queue()
+
+        # break if nothing is running
+        # any_alive = False
+        # for task in Task.tasks.values():
+        #     if task.alive:
+        #         any_alive = True
+        # if not any_alive:
+        #     break
+
+        time.sleep(0.2)
+
+except KeyboardInterrupt:
+    logger.log(Msg.SIGINT)
+    print()
+
+finally:
+    while True in [task.alive for task in Task.tasks.values()]:
+        pass
 
     logger.dump_queue()
-
-    # break if nothing is running
-    # any_alive = False
-    # for task in Task.tasks.values():
-    #     if task.alive:
-    #         any_alive = True
-    # if not any_alive:
-    #     break
-
-    time.sleep(0.2)
-
-logger.dump_queue()
-logger.log(Msg.Finished)
+    logger.log(Msg.Finished)

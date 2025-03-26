@@ -5,12 +5,14 @@ import os
 from variables import *
 
 main_messages = {
-    "Basic":          "{msg}",
-    "Debug":          "DEBUG: {msg}",
-    "Starting":       "Starting...",
-    "Started":        "Started!",
-    "Finished":       "Finished.",
-    "InternalError":  "Error! {error}"
+    "Basic":            "{msg}",
+    "Debug":            "DEBUG: {msg}",
+    "Starting":         "Starting...",
+    "Started":          "Started!",
+    "Finished":         "Finished.",
+    "TaskInvalidArgs":  "Invalid arguments for '{name}': {msg}",
+    "SIGINT":           "SIGINT received!",
+    "InternalError":    "Error! {error}"
 }
 
 task_messages = {
