@@ -88,7 +88,7 @@ else:
     sys.exit(1)
 
 if "log_file" in g:
-    logger.main_log_file = g["log_file"]
+    logger.file = g["log_file"]
 if "tasks_dir" in g:
     logger.tasks_dir = g["tasks_dir"]
 
