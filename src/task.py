@@ -48,7 +48,7 @@ class Task:
                 shell=False,
                 cwd=None,
                 read_len=4,
-                max_unread=4,
+                max_unread=None,
                 encoding="utf-8"
             ):
 

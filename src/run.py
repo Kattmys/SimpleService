@@ -30,34 +30,44 @@ def process_command(cmd):
             return "Invalid number of arguments: expected " + ", ".join([str(i) for i in lengths])
 
     num_args = {
-        "restart": 0,
-        "kill":    1,
         "list":    0,
         "names":   0,
-        "send":    2,
-        "ask":     2,
+        "kill":    0,
+        "start": 0,
+        "send":    1,
     }
 
+    task_cmds = (
+        "kill",
+        "start",
+        "send",
+    )
+
     if cmd in num_args:
-        m = check_args(num_args[cmd])
+        m = check_args(num_args[cmd] + (1 if cmd in task_cmds else 0))
         if m is not None:
             return m
+        elif cmd in task_cmds:
+            task = Task.get(args[0])
+            if not task:
+                return f"Task {args[0]} not found."
     else:
         return "Unknown command."
 
     match cmd:
-        case "restart":
-            for task in tasks:
+        case "start":
+            if not task.alive:
                 task.start()
-            logger.log(Msg.Started)
+                return "Started!"
+            else:
+                return "Task is already alive."
 
         case "kill":
-            t = Task.get(args[0])
-            if t:
-                t.process.kill()
+            if task.process.returncode is None:
+                task.process.kill()
                 return "Killed!"
             else:
-                return f"Task {args[0]} not found."
+                return "Task is not alive."
 
         case "list":
             return Task.list()
@@ -66,14 +76,10 @@ def process_command(cmd):
             return Task.names()
 
         case "send":
-            t = Task.get(args[0])
-            if t:
-                if t.send(args[1] + "\n"):
-                    return "Sent!"
-                else:
-                    return "Not sent."
+            if task.send(args[1] + "\n"):
+                return "Sent!"
             else:
-                return f"Task {args[0]} not found."
+                return "Not sent."
 
 path = sys.argv[1] if len(sys.argv) > 1 else "user/config.py"
 
