@@ -37,6 +37,7 @@ def process_command(cmd):
         "kill":    0,
         "start":   0,
         "restart": 0,
+        "reload":  0,
         "send":    1,
         "echo":    1,
     }
