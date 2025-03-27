@@ -38,6 +38,7 @@ def process_command(cmd):
         "start":   0,
         "restart": 0,
         "send":    1,
+        "echo":    1,
     }
 
     task_cmds = (
@@ -100,6 +101,9 @@ def process_command(cmd):
             )
 
             process_command = g["process_command"]
+
+        case "echo":
+            return args[0]
 
 if __name__ != "__main__":
     # file is imported
