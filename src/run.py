@@ -37,7 +37,6 @@ def process_command(cmd):
         "kill":    0,
         "start":   0,
         "restart": 0,
-        "reload":  0,
         "send":    1,
         "echo":    1,
     }
@@ -94,14 +93,6 @@ def process_command(cmd):
                 return "Sent!"
             else:
                 return "Not sent."
-
-        case "reload":
-            g = runpy.run_path(
-                sys.argv[0],
-                init_globals=globals()
-            )
-
-            process_command = g["process_command"]
 
         case "echo":
             return args[0]
