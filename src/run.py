@@ -20,6 +20,8 @@ def send_to_pipe(msg):
     t.start()
 
 def process_command(cmd):
+    global process_command
+
     spl = cmd.split()
     cmd = spl[0]
     args = spl[1:]
@@ -33,7 +35,8 @@ def process_command(cmd):
         "list":    0,
         "names":   0,
         "kill":    0,
-        "start": 0,
+        "start":   0,
+        "restart": 0,
         "send":    1,
     }
 
@@ -41,6 +44,7 @@ def process_command(cmd):
         "kill",
         "start",
         "send",
+        "restart",
     )
 
     if cmd in num_args:
@@ -69,6 +73,14 @@ def process_command(cmd):
             else:
                 return "Task is not alive."
 
+        case "restart":
+            if task.process.returncode is None:
+                task.process.kill()
+                task.start()
+                return "Restarted!"
+            else:
+                return "Task is not alive."
+
         case "list":
             return Task.list()
         
@@ -80,6 +92,18 @@ def process_command(cmd):
                 return "Sent!"
             else:
                 return "Not sent."
+
+        case "reload":
+            g = runpy.run_path(
+                sys.argv[0],
+                init_globals=globals()
+            )
+
+            process_command = g["process_command"]
+
+if __name__ != "__main__":
+    # file is imported
+    exit()
 
 path = sys.argv[1] if len(sys.argv) > 1 else "user/config.py"
 
