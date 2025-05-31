@@ -37,6 +37,7 @@ def process_command(cmd):
         "kill":    0,
         "start":   0,
         "restart": 0,
+        "stop":    0,
         "send":    1,
         "echo":    1,
     }
@@ -81,6 +82,11 @@ def process_command(cmd):
                 return "Restarted!"
             else:
                 return "Task is not alive."
+
+        case "stop":
+            for task in tasks:
+                task.process.kill()
+            sys.exit(0)
 
         case "list":
             return Task.list()
