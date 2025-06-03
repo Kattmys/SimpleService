@@ -170,7 +170,7 @@ class Task:
                 b = self.process.stdout.read(self.read_len)
 
                 if b:
-                    buf += b.decode(self.encoding)
+                    buf += b.decode(self.encoding, errors="backslashreplace")
 
                     if '\n' in buf:
                         while '\n' in buf:
