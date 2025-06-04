@@ -5,11 +5,9 @@ DIR=`realpath -s $0`
 DIR=`dirname $DIR`
 cd $DIR
 
-# Check if input is empty
-if [[ -z "$@" ]]; then
-    echo "No input. Use command 'help' for a list of commands."
-    exit
+# Do not send input if input is empty
+if [[ ! -z "$@" ]]; then
+    echo "$@" > pipes/send
 fi
 
-echo "$@" > pipes/send
 cat pipes/receive
